@@ -1,0 +1,16 @@
+CREATE DATABASE IF NOT EXISTS head;
+USE head;
+
+CREATE TABLE head_inventory (
+                                  id INT AUTO_INCREMENT PRIMARY KEY,
+                                  purchase_date DATE NOT NULL,
+                                  contract_number VARCHAR(50) NOT NULL,
+                                  nozzle_model VARCHAR(50) NOT NULL,
+                                  nozzle_serial VARCHAR(50) UNIQUE NOT NULL,
+                                  warehouse_date DATE,
+                                  usage_date DATE,
+                                  user VARCHAR(100),
+                                  usage_purpose VARCHAR(255),
+                                  installation_site VARCHAR(255),
+                                  nozzle_history TEXT
+);

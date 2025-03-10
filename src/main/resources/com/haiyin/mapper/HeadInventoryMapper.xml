@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haiyin.mapper.HeadInventoryMapper">
+
+    <resultMap type="com.haiyin.pojo.HeadInventory" id="headInventoryResultMap">
+        <id column="id" property="id"/>
+        <!-- 使用自定义TypeHandler或保持插入查询一致 -->
+        <result column="status" property="status"
+                typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <!-- 或自定义处理器 -->
+        <!-- <result column="status" property="status" typeHandler="com.example.EnumCodeTypeHandler"/> -->
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert" parameterType="list">
+        INSERT INTO tb_head_inventory (shipping_date, purchase_date, contract_number, head_model, head_serial, warehouse_date, voltage, jetsout, status, type)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.shippingDate}, #{item.purchaseDate}, #{item.contractNumber}, #{item.headModel}, #{item.headSerial}, #{item.warehouseDate}, #{item.voltage}, #{item.jetsout}, #{item.status.code}, #{item.type})
+        </foreach>
+    </insert>
+
+    <select id="findByNo" resultMap="headInventoryResultMap">
+        <!-- 明确列出字段更安全 -->
+        SELECT id, head_serial, status, type, version
+        FROM tb_head_inventory
+        WHERE head_serial = #{sprinklerNo}
+    </select>
+
+    <insert id="insertBatch">
+        INSERT INTO tb_head_inventory (shipping_date, purchase_date, contract_number, head_model, head_serial, warehouse_date, voltage, jetsout,status,
+        usage_date, user, usage_purpose, color,position,type, version, head_history, update_time)
+        VALUES
+        <foreach collection="headInventoryList" item="item" separator=",">
+            (#{item.shippingDate},#{item.purchaseDate}, #{item.contractNumber}, #{item.headModel}, #{item.headSerial}, #{item.warehouseDate},#{item.voltage},#{item.jetsout},#{item.status.code},
+            #{item.usageDate}, #{item.user}, #{item.usagePurpose}, #{item.color},#{item.position},#{item.type},#{item.version}, #{item.headHistory}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insert">
+        INSERT INTO tb_head_inventory (shipping_date,purchase_date, contract_number, head_model, head_serial, warehouse_date, voltage, jetsout,status,
+                                       usage_date, user, usage_purpose, color,position, head_history)
+        VALUES (#{purchaseDate}, #{contractNumber}, #{headModel}, #{headSerial},
+                #{warehouseDate}, #{usageDate}, #{user}, #{usagePurpose}, #{installationSite},
+                #{headHistory})
+    </insert>
+
+    <select id="list" resultMap="headInventoryResultMap">
+        SELECT *
+        FROM tb_head_inventory
+    </select>
+<!--    <select id="list" resultMap="headInventoryResultMap">-->
+<!--        SELECT *-->
+<!--        FROM tb_head_inventory-->
+<!--        <where>-->
+<!--            <if test="shippingDate != null and shippingDate != ''">-->
+<!--                shipping_date LIKE CONCAT('%', #{shippingDate}, '%')-->
+<!--            </if>-->
+<!--            <if test="purchaseDate != null and purchaseDate != ''">-->
+<!--                purchase_date LIKE CONCAT('%', #{purchaseDate}, '%')-->
+<!--            </if>-->
+<!--            <if test="contractNumber != null and contractNumber != ''">-->
+<!--                AND contract_number LIKE CONCAT('%', #{contractNumber}, '%')-->
+<!--            </if>-->
+<!--            <if test="headModel != null and headModel != ''">-->
+<!--                AND head_model LIKE CONCAT('%', #{headModel}, '%')-->
+<!--            </if>-->
+<!--            <if test="headSerial != null and headSerial != ''">-->
+<!--                AND head_serial LIKE CONCAT('%', #{headSerial}, '%')-->
+<!--            </if>-->
+<!--            <if test="warehouseDate != null and warehouseDate != ''">-->
+<!--                AND warehouse_date LIKE CONCAT('%', #{warehouseDate}, '%')-->
+<!--            </if>-->
+<!--            <if test="voltage != null and voltage != ''">-->
+<!--                AND voltage LIKE CONCAT('%', #{voltage}, '%')-->
+<!--            </if>-->
+<!--            <if test="jetsout != null and jetsout != ''">-->
+<!--                AND jetsout LIKE CONCAT('%', #{jetsout}, '%')-->
+<!--            </if>-->
+<!--            <if test="status != null and status != ''">-->
+<!--                AND status LIKE CONCAT('%', #{status.code}, '%')-->
+<!--            </if>-->
+<!--            <if test="usageDate != null and usageDate != ''">-->
+<!--                AND usage_date LIKE CONCAT('%', #{usageDate}, '%')-->
+<!--            </if>-->
+<!--            <if test="user != null and user != ''">-->
+<!--                AND user LIKE CONCAT('%', #{user}, '%')-->
+<!--            </if>-->
+<!--            <if test="usagePurpose != null and usagePurpose != ''">-->
+<!--                AND usage_purpose LIKE CONCAT('%', #{usagePurpose}, '%')-->
+<!--            </if>-->
+<!--            <if test="color != null and color != ''">-->
+<!--                AND color LIKE CONCAT('%', #{color}, '%')-->
+<!--            </if>-->
+<!--            <if test="position != null and position != ''">-->
+<!--                AND position LIKE CONCAT('%', #{position}, '%')-->
+<!--            </if>-->
+<!--            <if test="type != null and type != ''">-->
+<!--                AND type LIKE CONCAT('%', #{type}, '%')-->
+<!--            </if>-->
+<!--            <if test="version != null and version != ''">-->
+<!--                AND version LIKE CONCAT('%', #{version}, '%')-->
+<!--            </if>-->
+<!--            <if test="headHistory != null and headHistory != ''">-->
+<!--                AND head_history LIKE CONCAT('%', #{headHistory}, '%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+</mapper>

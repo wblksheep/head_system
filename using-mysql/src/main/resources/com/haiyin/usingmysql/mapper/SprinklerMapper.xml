@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haiyin.usingmysql.mapper.SprinklerMapper">
+
+    <resultMap type="com.haiyin.usingmysql.pojo.Sprinkler" id="sprinklerResultMap">
+        <id column="id" property="id"/>
+        <!-- 使用自定义TypeHandler或保持插入查询一致 -->
+        <result column="status" property="status"
+                typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <!-- 或自定义处理器 -->
+        <!-- <result column="status" property="status" typeHandler="com.example.EnumCodeTypeHandler"/> -->
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO tb_head_inventory (
+        head_serial,
+        status,
+        type,
+        version
+        ) VALUES (
+        #{sprinklerNo},
+        #{status.code},  <!-- 假设状态枚举使用 code 值 -->
+        #{type},
+        #{version}
+        )
+    </insert>
+
+    <select id="findByNo" resultMap="sprinklerResultMap">
+        <!-- 明确列出字段更安全 -->
+        SELECT id, head_serial, status, type, version
+        FROM tb_head_inventory
+        WHERE head_serial = #{sprinklerNo}
+    </select>
+
+    <insert id="batchInsert" parameterType="list">
+        INSERT INTO tb_head_inventory (shipping_date, purchase_date, contract_number, head_model, head_serial, warehouse_date, voltage, jetsout, status, type)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.shippingDate}, #{item.purchaseDate}, #{item.contractNumber}, #{item.headModel}, #{item.headSerial}, #{item.warehouseDate}, #{item.voltage}, #{item.jetsout}, #{item.status.code}, #{item.type})
+        </foreach>
+    </insert>
+
+
+</mapper>
