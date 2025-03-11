@@ -1,6 +1,7 @@
 package com.haiyin.controller;
 
 import com.haiyin.dto.SprinklerAllocationDTO;
+import com.haiyin.dto.SprinklerMaintainDTO;
 import com.haiyin.pojo.Article;
 import com.haiyin.pojo.Category;
 import com.haiyin.pojo.HeadInventory;
@@ -40,6 +41,12 @@ public class HeadInventoryController {
     @PostMapping
     public Result<PageBean<SprinklerAllocationDTO>> batchAllocate(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize, @RequestParam("excelFile") MultipartFile excelFile, @RequestParam(value = "txtFile") MultipartFile txtFile) {
         PageBean<SprinklerAllocationDTO> pb = headInventoryService.batchAllocate(pageNum, pageSize, excelFile, txtFile);
+        return Result.success(pb);
+    }
+
+    @PostMapping("/maintain")
+    public Result<PageBean<SprinklerMaintainDTO>> batchMaintain(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize, @RequestParam("excelFile") MultipartFile excelFile) {
+        PageBean<SprinklerMaintainDTO> pb = headInventoryService.batchMaintain(pageNum, pageSize, excelFile);
         return Result.success(pb);
     }
 
