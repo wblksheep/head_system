@@ -1,5 +1,6 @@
 package com.haiyin.service.base.builder;
 
+import com.haiyin.dto.BaseDTO;
 import com.haiyin.service.base.FileParseResult;
 import com.haiyin.service.base.FileParseResult.RawRecord;
 import com.haiyin.service.base.FileParseResult.ParseError;

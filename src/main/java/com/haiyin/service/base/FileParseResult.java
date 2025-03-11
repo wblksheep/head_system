@@ -1,5 +1,6 @@
 package com.haiyin.service.base;
 
+import com.haiyin.dto.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
