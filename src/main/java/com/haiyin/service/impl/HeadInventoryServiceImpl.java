@@ -78,41 +78,46 @@ public class HeadInventoryServiceImpl implements HeadInventoryService {
 
     @Override
     public PageBean<SprinklerMaintainDTO> batchMaintain(Integer pageNum, Integer pageSize, MultipartFile excelFile) {
-        try {
+        return null;
+    }
 
-            Info info = getMaintainInfo(pageNum, pageSize, excelFile);
-            transactionTemplate.execute(status -> {
-                try {
-                    // 3. 执行批量分配
-                    batchAllocateSprinklers(info.suc);
+//    @Override
+//    public PageBean<SprinklerMaintainDTO> batchMaintain(Integer pageNum, Integer pageSize, MultipartFile excelFile) {
+//        try {
+//
+//            Info info = getMaintainInfo(pageNum, pageSize, excelFile);
+//            transactionTemplate.execute(status -> {
+//                try {
+//                    // 3. 执行批量分配
+//                    batchAllocateSprinklers(info.suc);
+////                    status.setRollbackOnly();
+//                }catch (Exception e) {
 //                    status.setRollbackOnly();
-                }catch (Exception e) {
-                    status.setRollbackOnly();
-                    throw new RuntimeException(e);
-                }
-                return 0;
-            });
+//                    throw new RuntimeException(e);
+//                }
+//                return 0;
+//            });
+//
+//            PageBean<SprinklerAllocationDTO> pb = makePageBeanObj(pageNum, pageSize, info.fail);
+//            return pb;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-            PageBean<SprinklerAllocationDTO> pb = makePageBeanObj(pageNum, pageSize, info.fail);
-            return pb;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Info getMaintainInfo(Integer pageNum, Integer pageSize, MultipartFile excelFile) {
-
-        try {
-            List<TxtRecord> txtRecords = parseTxtFile(txtFile);
-            List<ExcelRecord> excelRecords = parseExcelFile(excelFile);
-            // 3. 匹配记录
-            Info info = matchAndPrintResults(txtRecords, excelRecords);
-
-            return info;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private Info getMaintainInfo(Integer pageNum, Integer pageSize, MultipartFile excelFile) {
+//
+//        try {
+////            List<TxtRecord> txtRecords = parseTxtFile(txtFile);
+//            List<ExcelRecord> excelRecords = parseExcelFile(excelFile);
+//            // 3. 匹配记录
+////            Info info = matchAndPrintResults(txtRecords, excelRecords);
+//
+////            return info;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private Info getDiffInfo(Integer pageNum, Integer pageSize, MultipartFile excelFile, MultipartFile txtFile) {
 
@@ -128,13 +133,15 @@ public class HeadInventoryServiceImpl implements HeadInventoryService {
         }
     }
 
+    //flags
+    @Autowired
+    private AllocationProcessor allocationProcessor;
 
     @Transactional
     @Override
     public PageBean<SprinklerAllocationDTO> batchAllocate(Integer pageNum, Integer pageSize, MultipartFile excelFile, MultipartFile txtFile) {
-
         try {
-
+            allocationProcessor.process(pageNum, pageSize, excelFile, txtFile);
             Info info = getDiffInfo(pageNum, pageSize, excelFile, txtFile);
             transactionTemplate.execute(status -> {
                 try {
