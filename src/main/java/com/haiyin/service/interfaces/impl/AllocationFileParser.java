@@ -2,10 +2,7 @@ package com.haiyin.service.interfaces.impl;
 
 import com.haiyin.dto.SprinklerAllocationDTO;
 import com.haiyin.enums.SprinklerType;
-import com.haiyin.service.base.FileParseResult;
-import com.haiyin.service.impl.HeadInventoryServiceImpl;
 import com.haiyin.service.interfaces.FileParser;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -185,7 +182,7 @@ public class AllocationFileParser implements FileParser {
     }
 
     @Override
-    public FileParseResult parseFiles(MultipartFile... files) {
+    public List<SprinklerAllocationDTO> parseFiles(MultipartFile... files) {
         MultipartFile excelFile = files[0];
         MultipartFile txtFile = files[1];
         Info<SprinklerAllocationDTO> info = getDiffInfo( excelFile, txtFile);

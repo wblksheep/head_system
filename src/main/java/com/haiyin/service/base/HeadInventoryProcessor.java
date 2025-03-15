@@ -4,6 +4,7 @@ import com.haiyin.pojo.PageBean;
 import com.haiyin.service.interfaces.FileParser;
 import com.haiyin.service.interfaces.StatusOperator;
 import lombok.Data;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -18,10 +19,11 @@ public abstract class HeadInventoryProcessor<T> {
         this.statusOperator = statusOperator;
     }
 
+    @RefreshScope
     // 模板方法
     public final PageBean<T> process(Integer pageNum, Integer pageSize, MultipartFile... files) {
         // 1. 解析文件
-        FileParseResult parseResult = fileParser.parseFiles(files);
+        List<T> parseResult = fileParser.parseFiles(files);
 
         // 2. 校验数据
         ValidationResult<T> validationResult = validate(parseResult);

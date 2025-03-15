@@ -1,8 +1,10 @@
 package com.haiyin.service.interfaces;
 
-import com.haiyin.service.base.FileParseResult;
+import com.haiyin.dto.SprinklerAllocationDTO;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface FileParser {
-    FileParseResult parseFiles(MultipartFile... files);
+import java.util.List;
+
+public interface FileParser<T> {
+    List<T> parseFiles(MultipartFile... files);
 }
