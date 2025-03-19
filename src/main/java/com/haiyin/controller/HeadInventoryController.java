@@ -13,6 +13,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +47,7 @@ public class HeadInventoryController {
         PageBean<SprinklerAllocationDTO> pb = headInventoryService.batchAllocate(pageNum, pageSize, excelFile, txtFile);
         return Result.success(pb);
     }
+
     @PostMapping("/maintain")
     public Result<PageBean<SprinklerMaintainDTO>> batchMaintain(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize, @RequestParam("excelFile") MultipartFile excelFile) {
         PageBean<SprinklerMaintainDTO> pb = headInventoryService.batchMaintain(pageNum, pageSize, excelFile);
