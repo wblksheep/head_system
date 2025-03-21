@@ -1001,7 +1001,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="290" parent="1" name="head_system">
-      <LastIntrospectionLocalTimestamp>2025-03-20.11:23:22</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-03-21.01:08:36</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="291" parent="1" name="information_schema">

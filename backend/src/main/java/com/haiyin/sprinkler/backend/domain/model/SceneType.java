@@ -1,7 +1,7 @@
 package com.haiyin.sprinkler.backend.domain.model;
 
 public enum SceneType {
-    ALLOCATE, MAINTAIN, INSPECTION;
+    IMPORT, ALLOCATE, MAINTAIN;
 
     public static boolean isValid(String type) {
         try {
