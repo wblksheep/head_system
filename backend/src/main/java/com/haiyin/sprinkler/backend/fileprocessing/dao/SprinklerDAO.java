@@ -13,11 +13,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="tb_sprinklers")
+@Table(name = "tb_sprinklers")
 public class SprinklerDAO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // 自增主键
+    private Long id; // 自增主键
 
     private LocalDate shippingDate;//发货日期
 
@@ -43,12 +43,13 @@ public class SprinklerDAO {
 
     private String headHistory; // 喷头历史
 
-    private String color;
-    private String position;
+    private String color;// 颜色
+    private String position;// 位置
+
 
     @Enumerated(EnumType.ORDINAL)
     @Column(columnDefinition = "TINYINT NOT NULL")
-    private HeadStatus status;
+    private HeadStatus status; //当前状态
 
     private Integer version = 0;     // 乐观锁默认值
 
@@ -57,7 +58,7 @@ public class SprinklerDAO {
     public SprinklerDAO() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -129,7 +130,7 @@ public class SprinklerDAO {
         return this.updateTime;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

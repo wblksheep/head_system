@@ -4,7 +4,6 @@ import com.haiyin.sprinkler.backend.fileprocessing.dto.AllocateDTO;
 import com.haiyin.sprinkler.backend.fileprocessing.service.parser.rule.ExcelParseRule;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -20,8 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-@Qualifier("allocateRule") // 可选限定符
-public class AllocateExcelRule implements ExcelParseRule<AllocateDTO> {
+@Qualifier("allocate2Rule") // 可选限定符
+public class Allocate2ExcelRule implements ExcelParseRule<AllocateDTO> {
     @Override
     public List<AllocateDTO> parse(InputStream stream) throws IOException {
         List<AllocateDTO> allocateList = new ArrayList<>();
@@ -31,24 +30,15 @@ public class AllocateExcelRule implements ExcelParseRule<AllocateDTO> {
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // 跳过标题行
             AllocateDTO dto = new AllocateDTO();
-            String sprinklerNo = row.getCell(2).getStringCellValue();
-            if (sprinklerNo == null || sprinklerNo.isEmpty()) continue;
+            String sprinklerNo = row.getCell(7).getStringCellValue();
+            if (sprinklerNo == null || sprinklerNo.isEmpty() || sprinklerNo.equalsIgnoreCase("无")||sprinklerNo.equalsIgnoreCase("无领用")) continue;
+            String type = row.getCell(11).getStringCellValue();
+            if(type == null || type.isEmpty() || type.equalsIgnoreCase("旧喷头")) continue;
             dto.setHeadSerial(sprinklerNo);
             dto.setUser(row.getCell(6).getStringCellValue());
-            dto.setUsagePurpose(row.getCell(7).getStringCellValue());
-            Cell kCell = row.getCell(8);
-            if (kCell == null) continue;
-            String kStr = kCell.getStringCellValue();
-            String color_position = row.getCell(8).getStringCellValue();
-            Matcher matcher = Pattern.compile("(\\d+)").matcher(color_position);
-            if (matcher.find()) {
-                String color = color_position.substring(0, matcher.start());
-                String position = matcher.group();
-                dto.setColor(color);
-                dto.setPosition(position);
-            }
-            dto.setUsageDate(LocalDate.now());
-            dto.setHistory(row.getCell(9).getStringCellValue());
+            dto.setUsagePurpose(row.getCell(8).getStringCellValue());
+            dto.setColor(row.getCell(9).getStringCellValue());
+            dto.setPosition(row.getCell(10).getStringCellValue());
             allocateList.add(dto);
         }
         return allocateList;
@@ -56,6 +46,6 @@ public class AllocateExcelRule implements ExcelParseRule<AllocateDTO> {
 
     @Override
     public String getSceneType() {
-        return "ALLOCATE"; // 对应sceneType参数
+        return "ALLOCATE2"; // 对应sceneType参数
     }
 }

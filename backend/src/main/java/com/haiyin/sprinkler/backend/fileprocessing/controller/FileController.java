@@ -24,7 +24,6 @@ public class FileController {
             @RequestParam("files") MultipartFile[] files,
             @RequestParam("sceneType") String sceneType) {
         List<?> dtos = fileProcessorService.processUpload(files, sceneType);
-//        return ResponseEntity.ok().build();
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 }

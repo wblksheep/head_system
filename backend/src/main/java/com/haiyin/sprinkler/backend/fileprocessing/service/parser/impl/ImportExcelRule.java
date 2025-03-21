@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 public class ImportExcelRule implements ExcelParseRule<ImportDTO> {
     @Override
     public List<ImportDTO> parse(InputStream stream) throws IOException {
-        // 使用POI解析为领用DTO
+        // 使用POI解析为导入DTO
         Workbook workbook = new XSSFWorkbook(stream);
         XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
         List<ImportDTO> list = new ArrayList<>();
@@ -39,7 +39,6 @@ public class ImportExcelRule implements ExcelParseRule<ImportDTO> {
             }
             String purchaseContract = row.getCell(0).getStringCellValue();
             Matcher matcher = Pattern.compile("\\d+").matcher(purchaseContract);
-//\s*（\s*\d+\s*）
             int matcher_start = 0;
             if (matcher.find(matcher_start)) {
                 LocalDate purchaseDate = LocalDateParseUtil.parseDate(matcher.group(0));
@@ -59,19 +58,6 @@ public class ImportExcelRule implements ExcelParseRule<ImportDTO> {
             dto.setWarehouseDate(LocalDateParseUtil.parseDate(row.getCell(4).getStringCellValue()));
             dto.setVoltage((float) row.getCell(10).getNumericCellValue());
             dto.setJetsout((int) row.getCell(11).getNumericCellValue());
-//                dto.setOwner(row.getCell(6).getStringCellValue());
-//                dto.setMachine(row.getCell(7).getStringCellValue());
-//                String color_position = row.getCell(8).getStringCellValue();
-//                matcher = Pattern.compile("(\\d+)").matcher(color_position);
-//                if (matcher.find()) {
-//                    String color = color_position.substring(0, matcher.start());
-//                    String position = matcher.group();
-//                    // 提取数字
-//                    dto.setColor(color);
-//                    dto.setPosition(position);
-//                }
-//            dto.setType(SprinklerType.NEW);
-
             if (headSerial != "") {
                 list.add(dto);
             }

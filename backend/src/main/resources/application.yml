@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/big_event
+    url: jdbc:mysql://localhost:3306/head_system
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,3 +14,13 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        data: TRACE
+        beans: DEBUG
