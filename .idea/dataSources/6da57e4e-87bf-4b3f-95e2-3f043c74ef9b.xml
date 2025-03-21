@@ -1001,7 +1001,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="290" parent="1" name="head_system">
-      <LastIntrospectionLocalTimestamp>2025-03-21.01:08:36</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-03-21.06:59:54</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="291" parent="1" name="information_schema">
@@ -1137,26 +1137,45 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Position>18</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <index id="322" parent="303" name="PRIMARY">
+    <column id="322" parent="303" name="damage_date">
+      <Position>19</Position>
+      <StoredType>date|0s</StoredType>
+    </column>
+    <column id="323" parent="303" name="damage_type">
+      <Comment>破损原因</Comment>
+      <Position>20</Position>
+      <StoredType>varchar(20)|0s</StoredType>
+    </column>
+    <column id="324" parent="303" name="real_type">
+      <Comment>具体原因</Comment>
+      <Position>21</Position>
+      <StoredType>varchar(20)|0s</StoredType>
+    </column>
+    <column id="325" parent="303" name="note">
+      <Comment>备注</Comment>
+      <Position>22</Position>
+      <StoredType>varchar(20)|0s</StoredType>
+    </column>
+    <index id="326" parent="303" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="323" parent="303" name="head_serial">
+    <index id="327" parent="303" name="head_serial">
       <ColNames>head_serial</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="324" parent="303" name="idx_nozzle_history">
+    <index id="328" parent="303" name="idx_nozzle_history">
       <ColNames>head_history</ColNames>
       <Type>fulltext</Type>
     </index>
-    <key id="325" parent="303" name="PRIMARY">
+    <key id="329" parent="303" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="326" parent="303" name="head_serial">
+    <key id="330" parent="303" name="head_serial">
       <UnderlyingIndexName>head_serial</UnderlyingIndexName>
     </key>
   </database-model>

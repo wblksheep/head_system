@@ -4,22 +4,21 @@ import com.google.common.base.Preconditions;
 import com.haiyin.sprinkler.backend.domain.model.SceneType;
 import com.haiyin.sprinkler.backend.fileprocessing.dao.SprinklerDAO;
 import com.haiyin.sprinkler.backend.fileprocessing.dto.AllocateDTO;
+import com.haiyin.sprinkler.backend.fileprocessing.dto.DamageDTO;
 import com.haiyin.sprinkler.backend.fileprocessing.dto.ImportDTO;
 import com.haiyin.sprinkler.backend.fileprocessing.dto.MaintainDTO;
 import com.haiyin.sprinkler.backend.fileprocessing.service.FileProcessorService;
-import com.haiyin.sprinkler.backend.fileprocessing.service.SprinklerService;
 import com.haiyin.sprinkler.backend.fileprocessing.service.StateMachine;
 import com.haiyin.sprinkler.backend.fileprocessing.service.converter.DAOConverter;
 import com.haiyin.sprinkler.backend.fileprocessing.service.exception.FileProcessingException;
 import com.haiyin.sprinkler.backend.fileprocessing.service.parser.ExcelParser;
+import com.haiyin.sprinkler.backend.fileprocessing.service.saver.SprinklerSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 public class FileProcessorServiceImpl implements FileProcessorService {
@@ -30,12 +29,11 @@ public class FileProcessorServiceImpl implements FileProcessorService {
     @Autowired
     private DAOConverter daoConverter;
 
-
     @Autowired
     private StateMachine stateMachine;
 
     @Autowired
-    private SprinklerService sprinklerService;
+    private SprinklerSaver sprinklerSaver;
 
 //    @Transactional
     @Override
@@ -55,6 +53,10 @@ public class FileProcessorServiceImpl implements FileProcessorService {
                     validateFileCount(files, 1,type.name());
                     return handleMaintain(files[0]);
                 }
+                case DAMAGE ->{
+                    validateFileCount(files, 1,type.name());
+                    return handleDamage(files[0]);
+                }
                 default -> throw new IllegalArgumentException("Unsupported scene type");
             }
         } catch (IOException e) {
@@ -62,55 +64,64 @@ public class FileProcessorServiceImpl implements FileProcessorService {
         }
     }
 
+    private List<?> handleDamage(MultipartFile file) throws IOException {
+        String sceneType = SceneType.DAMAGE.name();
+        List<DamageDTO> dtos = excelParser.parseByStream(file, sceneType);
+        // 2. 并行流加速转换
+        List<SprinklerDAO> daos = dtos.parallelStream()
+                .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
+                .toList();
+        List<Long> daoIds = sprinklerSaver.batchUpsert(daos, sceneType);
+        stateMachine.batchRequestTransition(daoIds);
+        return dtos;
+    }
+
     private List<?> handleMaintain(MultipartFile file) throws IOException {
         String sceneType = SceneType.MAINTAIN.name();
-        try (InputStream excelStream = file.getInputStream()) {
+        List<AllocateDTO> allocateDTOS = excelParser.parseByStream(file, "allocate2");
+        // 2. 并行流加速转换
+        List<SprinklerDAO> allocateDAOS = allocateDTOS.parallelStream()
+                .map(dto -> (SprinklerDAO) daoConverter.parseByStream("allocate2").convert(dto))
+                .toList();
+        List<Long> daoIds = sprinklerSaver.batchUpsert(allocateDAOS, "allocate");
+        stateMachine.batchRequestTransition(daoIds);
+        List<MaintainDTO> maintainDTOS = excelParser.parseByStream(file, sceneType);
+        // 2. 并行流加速转换
+        List<SprinklerDAO> maintainDAOS = maintainDTOS.parallelStream()
+                .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
+                .toList();
+        List<Long> maintainDAOIds = sprinklerSaver.batchUpsert(maintainDAOS, sceneType);
+        stateMachine.batchRequestTransition(maintainDAOIds);
+        return maintainDTOS;
 
-            List<Long> ids = processBatch(file, "allocate2", AllocateDTO.class);
-            stateMachine.batchRequestTransition(ids);
-            List<MaintainDTO> maintainDTOs = excelParser.parseByStream(excelStream, "maintain");
-            List<Long> daoIds = processBatch(file, sceneType, MaintainDTO.class);
-            stateMachine.batchRequestTransition(daoIds);
-//                    throw new RuntimeException();
-            return maintainDTOs;
-        }
     }
 
     private List<?> handleAllocate(MultipartFile file) throws IOException {
         String sceneType = SceneType.ALLOCATE.name();
-        try (InputStream excelStream = file.getInputStream()) {
-            List<AllocateDTO> dtos = excelParser.parseByStream(excelStream, sceneType);
-            List<Long> ids = processBatch(file, sceneType, AllocateDTO.class);
-            stateMachine.batchRequestTransition(ids);
-            return dtos;
-        }
+        List<AllocateDTO> dtos = excelParser.parseByStream(file, sceneType);
+        // 2. 并行流加速转换
+        List<SprinklerDAO> daos = dtos.parallelStream()
+                .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
+                .toList();
+        List<Long> ids = sprinklerSaver.batchUpsert(daos, sceneType);
+        stateMachine.batchRequestTransition(ids);
+        return dtos;
     }
 
     private List<?> handleImport(MultipartFile[] files) throws IOException {
         String sceneType = SceneType.IMPORT.name();
-        try (InputStream excelStream = files[0].getInputStream();
-             InputStream txtStream = files[1].getInputStream()) {
-            List<ImportDTO> dtos = excelParser.parseByStream(excelStream, sceneType);
-            Function f = (dto)->(SprinklerDAO)daoConverter.parseByStream(sceneType).convert(dto);
-            List<SprinklerDAO> daos = dtos.stream().map(f).toList();
-            sprinklerService.batchSave(daos);
-            return dtos;
-        }
+        List<ImportDTO> dtos = excelParser.parseByStream(files[0], sceneType);
+        // 2. 并行流加速转换
+        List<SprinklerDAO> daos = dtos.parallelStream()
+                .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
+                .toList();
+        List<Long> ids = sprinklerSaver.batchUpsert(daos, sceneType);
+        return dtos;
     }
 
     private void validateFileCount(MultipartFile[] files, int requiredFiles, String sceneType) {
         Preconditions.checkArgument(files.length >= requiredFiles,
                 "Missing required files for scene: %s", sceneType);
     }
-
-    private <T> List<Long> processBatch(MultipartFile file, String sceneType, Class<T> dtoType) throws IOException {
-        try (InputStream stream = file.getInputStream()) {
-            List<T> dtos = excelParser.parseByStream(stream, sceneType);
-            return sprinklerService.batchUpsert(dtos.parallelStream()
-                            .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
-                            .toList());
-        }
-    }
-
 
 }

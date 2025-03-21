@@ -46,6 +46,11 @@ public class SprinklerDAO {
     private String color;// 颜色
     private String position;// 位置
 
+    private LocalDate damageDate;
+
+    private String note;
+    private String damageType;
+    private String realType;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(columnDefinition = "TINYINT NOT NULL")
@@ -116,6 +121,22 @@ public class SprinklerDAO {
 
     public String getPosition() {
         return this.position;
+    }
+
+    public LocalDate getDamageDate() {
+        return this.damageDate;
+    }
+
+    public String getNote() {
+        return this.note;
+    }
+
+    public String getDamageType() {
+        return this.damageType;
+    }
+
+    public String getRealType() {
+        return this.realType;
     }
 
     public HeadStatus getStatus() {
@@ -190,6 +211,22 @@ public class SprinklerDAO {
         this.position = position;
     }
 
+    public void setDamageDate(LocalDate damageDate) {
+        this.damageDate = damageDate;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public void setDamageType(String damageType) {
+        this.damageType = damageType;
+    }
+
+    public void setRealType(String realType) {
+        this.realType = realType;
+    }
+
     public void setStatus(HeadStatus status) {
         this.status = status;
     }
@@ -259,6 +296,20 @@ public class SprinklerDAO {
         final Object this$position = this.getPosition();
         final Object other$position = other.getPosition();
         if (this$position == null ? other$position != null : !this$position.equals(other$position)) return false;
+        final Object this$damageDate = this.getDamageDate();
+        final Object other$damageDate = other.getDamageDate();
+        if (this$damageDate == null ? other$damageDate != null : !this$damageDate.equals(other$damageDate))
+            return false;
+        final Object this$note = this.getNote();
+        final Object other$note = other.getNote();
+        if (this$note == null ? other$note != null : !this$note.equals(other$note)) return false;
+        final Object this$damageType = this.getDamageType();
+        final Object other$damageType = other.getDamageType();
+        if (this$damageType == null ? other$damageType != null : !this$damageType.equals(other$damageType))
+            return false;
+        final Object this$realType = this.getRealType();
+        final Object other$realType = other.getRealType();
+        if (this$realType == null ? other$realType != null : !this$realType.equals(other$realType)) return false;
         final Object this$status = this.getStatus();
         final Object other$status = other.getStatus();
         if (this$status == null ? other$status != null : !this$status.equals(other$status)) return false;
@@ -309,6 +360,14 @@ public class SprinklerDAO {
         result = result * PRIME + ($color == null ? 43 : $color.hashCode());
         final Object $position = this.getPosition();
         result = result * PRIME + ($position == null ? 43 : $position.hashCode());
+        final Object $damageDate = this.getDamageDate();
+        result = result * PRIME + ($damageDate == null ? 43 : $damageDate.hashCode());
+        final Object $note = this.getNote();
+        result = result * PRIME + ($note == null ? 43 : $note.hashCode());
+        final Object $damageType = this.getDamageType();
+        result = result * PRIME + ($damageType == null ? 43 : $damageType.hashCode());
+        final Object $realType = this.getRealType();
+        result = result * PRIME + ($realType == null ? 43 : $realType.hashCode());
         final Object $status = this.getStatus();
         result = result * PRIME + ($status == null ? 43 : $status.hashCode());
         final Object $version = this.getVersion();
@@ -319,6 +378,6 @@ public class SprinklerDAO {
     }
 
     public String toString() {
-        return "SprinklerDAO(id=" + this.getId() + ", shippingDate=" + this.getShippingDate() + ", purchaseDate=" + this.getPurchaseDate() + ", contractNumber=" + this.getContractNumber() + ", headModel=" + this.getHeadModel() + ", headSerial=" + this.getHeadSerial() + ", warehouseDate=" + this.getWarehouseDate() + ", voltage=" + this.getVoltage() + ", jetsout=" + this.getJetsout() + ", usageDate=" + this.getUsageDate() + ", user=" + this.getUser() + ", usagePurpose=" + this.getUsagePurpose() + ", headHistory=" + this.getHeadHistory() + ", color=" + this.getColor() + ", position=" + this.getPosition() + ", status=" + this.getStatus() + ", version=" + this.getVersion() + ", updateTime=" + this.getUpdateTime() + ")";
+        return "SprinklerDAO(id=" + this.getId() + ", shippingDate=" + this.getShippingDate() + ", purchaseDate=" + this.getPurchaseDate() + ", contractNumber=" + this.getContractNumber() + ", headModel=" + this.getHeadModel() + ", headSerial=" + this.getHeadSerial() + ", warehouseDate=" + this.getWarehouseDate() + ", voltage=" + this.getVoltage() + ", jetsout=" + this.getJetsout() + ", usageDate=" + this.getUsageDate() + ", user=" + this.getUser() + ", usagePurpose=" + this.getUsagePurpose() + ", headHistory=" + this.getHeadHistory() + ", color=" + this.getColor() + ", position=" + this.getPosition() + ", damageDate=" + this.getDamageDate() + ", note=" + this.getNote() + ", damageType=" + this.getDamageType() + ", realType=" + this.getRealType() + ", status=" + this.getStatus() + ", version=" + this.getVersion() + ", updateTime=" + this.getUpdateTime() + ")";
     }
 }

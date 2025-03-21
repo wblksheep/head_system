@@ -2,9 +2,8 @@ package com.haiyin.sprinkler.backend.fileprocessing.service.converter.impl;
 
 import com.haiyin.sprinkler.backend.fileprocessing.dao.HeadStatus;
 import com.haiyin.sprinkler.backend.fileprocessing.dao.SprinklerDAO;
-import com.haiyin.sprinkler.backend.fileprocessing.dto.AllocateDTO;
 import com.haiyin.sprinkler.backend.fileprocessing.dto.MaintainDTO;
-import com.haiyin.sprinkler.backend.fileprocessing.service.parser.rule.DAOConverterRule;
+import com.haiyin.sprinkler.backend.fileprocessing.service.converter.DAOConverterRule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ public class SprinklerServiceImpl implements SprinklerService {
 
     @Transactional
     @Override
-    public List<Long> batchUpsert(List<SprinklerDAO> daos) {
+    public List<Long> batchUpsert(List<SprinklerDAO> daos, String sceneType) {
 
         String sql = "INSERT INTO tb_sprinklers (id, head_serial, usage_date, user, usage_purpose, head_history, color, position, update_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +

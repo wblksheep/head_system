@@ -1,15 +1,8 @@
 package com.haiyin.sprinkler.backend.fileprocessing.service.converter;
 
 import com.haiyin.sprinkler.backend.fileprocessing.service.factory.DAOConverterRuleFactory;
-import com.haiyin.sprinkler.backend.fileprocessing.service.parser.rule.DAOConverterRule;
-import com.haiyin.sprinkler.backend.fileprocessing.service.parser.rule.ExcelParseRule;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 @Component
 public class DAOConverter {

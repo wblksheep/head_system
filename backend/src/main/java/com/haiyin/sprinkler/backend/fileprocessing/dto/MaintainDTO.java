@@ -18,7 +18,7 @@ public class MaintainDTO {
 
     private LocalDate usageDate;
 
-    private String history;
+    private String headHistory;
 
     public String getHeadSerial() {
         return this.headSerial;
@@ -44,8 +44,8 @@ public class MaintainDTO {
         return this.usageDate;
     }
 
-    public String getHistory() {
-        return this.history;
+    public String getHeadHistory() {
+        return this.headHistory;
     }
 
     public void setHeadSerial(String headSerial) {
@@ -72,8 +72,8 @@ public class MaintainDTO {
         this.usageDate = usageDate;
     }
 
-    public void setHistory(String history) {
-        this.history = history;
+    public void setHeadHistory(String headHistory) {
+        this.headHistory = headHistory;
     }
 
     public boolean equals(final Object o) {
@@ -101,8 +101,8 @@ public class MaintainDTO {
         final Object this$usageDate = this.getUsageDate();
         final Object other$usageDate = other.getUsageDate();
         if (this$usageDate == null ? other$usageDate != null : !this$usageDate.equals(other$usageDate)) return false;
-        final Object this$history = this.getHistory();
-        final Object other$history = other.getHistory();
+        final Object this$history = this.getHeadHistory();
+        final Object other$history = other.getHeadHistory();
         if (this$history == null ? other$history != null : !this$history.equals(other$history)) return false;
         return true;
     }
@@ -126,12 +126,12 @@ public class MaintainDTO {
         result = result * PRIME + ($position == null ? 43 : $position.hashCode());
         final Object $usageDate = this.getUsageDate();
         result = result * PRIME + ($usageDate == null ? 43 : $usageDate.hashCode());
-        final Object $history = this.getHistory();
+        final Object $history = this.getHeadHistory();
         result = result * PRIME + ($history == null ? 43 : $history.hashCode());
         return result;
     }
 
     public String toString() {
-        return "MaintainDTO(headSerial=" + this.getHeadSerial() + ", user=" + this.getUser() + ", usagePurpose=" + this.getUsagePurpose() + ", color=" + this.getColor() + ", position=" + this.getPosition() + ", usageDate=" + this.getUsageDate() + ", history=" + this.getHistory() + ")";
+        return "MaintainDTO(headSerial=" + this.getHeadSerial() + ", user=" + this.getUser() + ", usagePurpose=" + this.getUsagePurpose() + ", color=" + this.getColor() + ", position=" + this.getPosition() + ", usageDate=" + this.getUsageDate() + ", history=" + this.getHeadHistory() + ")";
     }
 }

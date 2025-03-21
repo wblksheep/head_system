@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface SprinklerService {
     void batchSave(List<SprinklerDAO> daos);
-    List<Long> batchUpsert(List<SprinklerDAO> daos);
+    List<Long> batchUpsert(List<SprinklerDAO> daos, String sceneType);
 }
