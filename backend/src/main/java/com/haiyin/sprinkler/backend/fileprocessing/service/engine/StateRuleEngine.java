@@ -8,6 +8,6 @@ import java.util.Map;
 
 public interface StateRuleEngine {
     boolean canTransition(HeadStatus currentState);
-    HeadStatus calculateNextState(HeadStatus currentState);
-    Map<Long, HeadStatus> calculateNextStates(List<SprinklerDAO> currentState);
+    HeadStatus calculateNextState(HeadStatus currentState, Integer sceneCode);
+    Map<Long, HeadStatus> calculateNextStates(List<SprinklerDAO> currentState, Integer sceneCode);
 }

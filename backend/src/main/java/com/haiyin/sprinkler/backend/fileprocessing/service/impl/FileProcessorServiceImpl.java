@@ -72,7 +72,7 @@ public class FileProcessorServiceImpl implements FileProcessorService {
                 .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
                 .toList();
         List<Long> daoIds = sprinklerSaver.batchUpsert(daos, sceneType);
-        stateMachine.batchRequestTransition(daoIds);
+        stateMachine.batchRequestTransition(daoIds, 3);
         return dtos;
     }
 
@@ -84,14 +84,14 @@ public class FileProcessorServiceImpl implements FileProcessorService {
                 .map(dto -> (SprinklerDAO) daoConverter.parseByStream("allocate2").convert(dto))
                 .toList();
         List<Long> daoIds = sprinklerSaver.batchUpsert(allocateDAOS, "allocate");
-        stateMachine.batchRequestTransition(daoIds);
+        stateMachine.batchRequestTransition(daoIds, 1);
         List<MaintainDTO> maintainDTOS = excelParser.parseByStream(file, sceneType);
         // 2. 并行流加速转换
         List<SprinklerDAO> maintainDAOS = maintainDTOS.parallelStream()
                 .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
                 .toList();
         List<Long> maintainDAOIds = sprinklerSaver.batchUpsert(maintainDAOS, sceneType);
-        stateMachine.batchRequestTransition(maintainDAOIds);
+        stateMachine.batchRequestTransition(maintainDAOIds, 2);
         return maintainDTOS;
 
     }
@@ -104,7 +104,7 @@ public class FileProcessorServiceImpl implements FileProcessorService {
                 .map(dto -> (SprinklerDAO) daoConverter.parseByStream(sceneType).convert(dto))
                 .toList();
         List<Long> ids = sprinklerSaver.batchUpsert(daos, sceneType);
-        stateMachine.batchRequestTransition(ids);
+        stateMachine.batchRequestTransition(ids, 1);
         return dtos;
     }
 

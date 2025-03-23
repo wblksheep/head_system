@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StateMachineImpl implements StateMachine {
@@ -24,18 +23,6 @@ public class StateMachineImpl implements StateMachine {
     @Autowired
     private StateRuleEngine stateRuleEngine;
 
-    @Override
-    public void requestTransition(Long daoId, HeadStatus expectedState) {
-        SprinklerDAO dao = sprinklerRepository.findById(Long.valueOf(daoId))
-                .orElseThrow(() -> new EntityNotFoundException("SprinklerDAO not found: " + daoId));
-        if (dao.getStatus() == expectedState && stateRuleEngine.canTransition(dao.getStatus())) {
-            HeadStatus newState = stateRuleEngine.calculateNextState(dao.getStatus());
-            int updated = sprinklerRepository.updateState(daoId, newState, expectedState);
-            if (updated == 0) {
-                throw new StateConflictException("状态冲突，当前状态已变更");
-            }
-        }
-    }
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -43,12 +30,12 @@ public class StateMachineImpl implements StateMachine {
     // 新增批量状态转移方法
     @Transactional
     @Override
-    public void batchRequestTransition(List<Long> daoIds) {
+    public void batchRequestTransition(List<Long> daoIds, Integer sceneCode) {
         // 1. 批量查询 DAO
         List<SprinklerDAO> daos = sprinklerRepository.findAllById(daoIds);
 
         // 2. 批量计算目标状态
-        Map<Long, HeadStatus> idToNewStatus = stateRuleEngine.calculateNextStates(daos);
+        Map<Long, HeadStatus> idToNewStatus = stateRuleEngine.calculateNextStates(daos, sceneCode);
 
         // 3. 单次 SQL 批量更新
         String sql = "UPDATE tb_sprinklers SET status = ? WHERE id = ? AND status = ?";
@@ -56,7 +43,7 @@ public class StateMachineImpl implements StateMachine {
 
         daos.forEach(dao -> {
             HeadStatus newStatus = idToNewStatus.get(dao.getId());
-            if (newStatus != null) {
+            if (newStatus != null&&newStatus.getCode() == sceneCode) {
                 // 参数顺序：newStatus, id, oldStatus
                 batchArgs.add(new Object[]{newStatus.getCode(), dao.getId(), dao.getStatus().getCode()});
             }
